@@ -1,118 +1,281 @@
-# My App
+# 🔐 NFT Membership Access System
 
-A Web3 dApp composed with [[N]skills](https://www.nskills.xyz).
+> **Own the NFT. Hold the key. The blockchain decides the rest.**
 
-## Blueprint: selected nodes
+A decentralized membership platform where owning an NFT equals having access — and the smart contract automatically enforces whether that access is still valid.
 
-These components were included in this generation:
+---
 
-- **ERC-721 Stylus NFT** — Deploy and interact with ERC-721 NFTs on Arbitrum Stylus
-- **Frontend Scaffold** — Generate a Next.js Web3 application with wagmi, RainbowKit, and smart contract integration
-- **Wallet Authentication** — Wallet connection with RainbowKit and WalletConnect
+## 📖 Table of Contents
 
-## Project structure
+- [Overview](#overview)
+- [User Flow](#user-flow)
+- [System Architecture](#system-architecture)
+- [Data Flow](#data-flow)
+- [Core Contract Logic](#core-contract-logic)
+- [Build Phases](#build-phases)
+- [Tech Stack](#tech-stack)
+- [Mental Model](#mental-model)
+
+---
+
+## Overview
+
+Traditional membership systems rely on centralized servers to track and verify subscriptions. This project replaces that with an on-chain approach:
+
+- A user **buys a membership** → a **NFT is minted** to their wallet
+- The NFT carries an **expiry timestamp** stored directly on the smart contract
+- Every time a user tries to access premium content, the frontend calls `hasAccess(userAddress)` on the contract
+- The contract checks ownership **and** expiry — no backend, no database, no middleman
+
+---
+
+## User Flow
+
+### Step 1 — Open the App
+The frontend loads in the browser. No login required, no account to create.
+
+### Step 2 — Connect Wallet (MetaMask)
+The user connects their MetaMask wallet. Their wallet address becomes their identity.
 
 ```
-my-app/
-├── apps/
-│   └── web/                    # Next.js app (install dependencies here)
-│       ├── src/
-│       ├── package.json
-│       └── ...
-├── contracts/                  # Rust/Stylus smart contracts
-│   └── erc721/
-├── docs/                       # Documentation
-├── scripts/                     # Deploy / utility scripts (if generated)
-├── .gitignore
-└── README.md
+user wallet address = identity
 ```
 
-## Quick start
+### Step 3 — Buy Membership
+The user clicks **"Buy Membership"**.
 
-### Prerequisites
+Behind the scenes:
+- The smart contract mints a new NFT to the user's wallet
+- The contract records:
+  - `owner address` — who holds the membership
+  - `expiry timestamp` — when the membership expires
 
-- **Node.js** 18+ and **npm** (comes with Node.js)
-- **Rust** toolchain and **cargo-stylus** for building/deploying Stylus contracts (see `docs/` and [Stylus SDK](https://github.com/OffchainLabs/stylus-sdk-rs))
+### Step 4 — Membership Stored On-Chain
+The blockchain now permanently stores:
 
-### Step-by-step
+```
+tokenId  →  owner address
+tokenId  →  expiry timestamp
+user     →  tokenId
+```
 
-1. **Clone and enter the project**
+No server. No database. Fully verifiable by anyone.
 
-   ```bash
-   git clone <your-repo-url>
-   cd <your-repo-name>
-   ```
+### Step 5 — Access Premium Content
+The user clicks **"Access Premium Content"**.
 
-   ![Clone and enter the project](https://raw.githubusercontent.com/Cradle-app/NSkills/main/apps/web/public/clone-and-enter.png)
+The frontend calls:
 
-2. **Install dependencies** for the Next.js app (this project has no root `package.json`; dependencies live under `apps/web`):
+```js
+hasAccess(userAddress)
+```
 
-   ```bash
-   cd apps/web
-   npm install
-   ```
+### Step 6 — Smart Contract Decision
 
-   ![Install dependencies](https://raw.githubusercontent.com/Cradle-app/NSkills/main/apps/web/public/install-dep.png)
+```
+IF   owns NFT  AND  not expired  →  allow access
+ELSE                             →  deny access
+```
 
-3. **Environment variables**
+### Step 7 — UI Reaction
 
-   ```bash
-   cp .env.example .env
-   ```
+| Result | What the User Sees |
+|--------|-------------------|
+| ✅ Valid membership | Premium content is shown |
+| ❌ No membership / Expired | "Buy Membership" prompt |
 
-   Edit `.env` and set:
+---
 
-   - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`: WalletConnect Cloud project ID for wallet connections
+## System Architecture
 
-   ![Environment variables](https://raw.githubusercontent.com/Cradle-app/NSkills/main/apps/web/public/env-var.png)
+### 🔹 A. Smart Contract — Core Engine
 
-### ERC-721 Integration
+> Lives on the blockchain. This is your backend.
 
-Add the `ERC721InteractionPanel` to `apps/web/src/app/page.tsx`:
+**Responsibilities:**
+- Mint NFTs upon membership purchase
+- Store expiry timestamps per token
+- Verify access via `hasAccess()`
 
-```tsx
-import { WalletButton } from '@/components/wallet-button';
-import { ERC721InteractionPanel } from '@/lib/erc721-stylus/src';
+**On-chain data:**
+```
+tokenId  →  expiryTime
+user     →  tokenId
+```
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="max-w-5xl w-full text-center">
-        <h1 className="text-4xl font-bold mb-8">
-          My DApp
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-12">
-          A Web3 application built with Cradle
-        </p>
+**Key functions:**
+```solidity
+mintMembership()   // Mints NFT + records expiry
+hasAccess(address) // Returns true/false
+```
 
-        <div className="flex justify-center">
-          <WalletButton />
-        </div>
+---
 
-        <ERC721InteractionPanel />
-      </div>
-    </main>
-  );
+### 🔹 B. Frontend — `apps/web`
+
+> What the user sees and interacts with.
+
+**Responsibilities:**
+- Render the UI
+- Connect to MetaMask wallet
+- Trigger contract functions on user action
+- Display access state (granted / denied)
+
+---
+
+### 🔹 C. Blockchain Interaction Layer
+
+> The bridge between your UI and the smart contract.
+
+**Library:** `ethers.js`
+
+**Responsibilities:**
+- Call smart contract functions
+- Send signed transactions to the network
+- Read current state from the blockchain
+
+---
+
+### 🔹 D. Wallet Layer
+
+> The user's identity and signing authority.
+
+**Tool:** MetaMask
+
+**Responsibilities:**
+- Provide the user's wallet address
+- Sign and authorize transactions before they hit the chain
+
+---
+
+## Data Flow
+
+Every user interaction follows this exact path:
+
+```
+User clicks button
+  → Frontend calls contract function
+    → MetaMask prompts user to sign
+      → Signed transaction sent to blockchain
+        → Smart contract executes logic
+          → Blockchain state is updated
+            → Frontend reads new state
+              → UI reflects the change
+```
+
+No shortcuts. No centralized shortcuts. Every state change is cryptographically verified.
+
+---
+
+## Core Contract Logic
+
+```solidity
+// Simplified pseudocode
+
+mapping(uint256 => uint256) public tokenExpiry;
+mapping(address => uint256) public userToken;
+
+function mintMembership() external payable {
+    uint256 tokenId = _mint(msg.sender);
+    tokenExpiry[tokenId] = block.timestamp + MEMBERSHIP_DURATION;
+    userToken[msg.sender] = tokenId;
+}
+
+function hasAccess(address user) external view returns (bool) {
+    uint256 tokenId = userToken[user];
+    return (
+        ownerOf(tokenId) == user &&
+        block.timestamp < tokenExpiry[tokenId]
+    );
 }
 ```
 
-### Run the web app
+---
 
-```bash
-cd apps/web && npm run dev
+## Build Phases
+
+### 🥇 Phase 1 — Smart Contract (Foundation)
+Build the `MembershipNFT` contract with:
+- `mintMembership()` function
+- `hasAccess()` function
+- Expiry mapping
+
+**Output:** ✅ Working contract running locally
+
+---
+
+### 🥈 Phase 2 — Deployment
+- Write deployment scripts
+- Deploy to local node or testnet
+- Capture the deployed contract address
+
+**Output:** ✅ Contract live on-chain
+
+---
+
+### 🥉 Phase 3 — Frontend Setup
+- Scaffold the UI
+- Implement wallet connection via MetaMask
+
+**Output:** ✅ User can connect their wallet
+
+---
+
+### 🏁 Phase 4 — Integration
+- Wire the frontend to the deployed contract using `ethers.js`
+- Buttons call real contract functions
+
+**Output:** ✅ Frontend ↔ Contract fully connected
+
+---
+
+### 🔥 Phase 5 — Access Logic
+- Implement "Buy Membership" flow
+- Implement `hasAccess` check on page load and button click
+- Show/hide premium content based on result
+
+**Output:** ✅ Full end-to-end working system
+
+---
+
+### ✨ Phase 6 — Polish
+- Display membership expiry date to the user
+- Improve UI and UX details
+- Handle edge cases (expired, wrong network, no wallet)
+
+**Output:** ✅ Production-ready experience
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Smart Contract | Solidity |
+| Contract Framework | Hardhat / Foundry |
+| Blockchain Interaction | ethers.js |
+| Wallet | MetaMask |
+| Frontend | React (apps/web) |
+| Network | Local / Testnet (e.g. Sepolia) |
+
+---
+
+## Mental Model
+
+Whenever you feel lost, come back to this:
+
+```
+NFT             =   Membership card
+Smart Contract  =   The rules (immutable, automatic)
+Frontend        =   The interface (what users see)
+Wallet          =   The user's identity
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+The smart contract is the single source of truth. The frontend only reads and reacts. The wallet is the only way to prove who you are.
 
-
-## Documentation
-
-Check the `docs/` folder for guides that match your blueprint (e.g. frontend setup, contract deployment, API routes).
+---
 
 ## License
 
 MIT
-
----
-
-Generated with [[N]skills](https://www.nskills.xyz)
