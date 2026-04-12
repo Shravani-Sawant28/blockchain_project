@@ -1,0 +1,140 @@
+﻿ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  ≡ƒÜÇ Deploying MembershipNFT Contract
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  Deployer address : 0xDf9C0E9b8e5c7E0Ed27b44d273CB48A7d954d61c
+  Deployer balance : 0.049959091131942139 ETH
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Deploying contract...
+
+  Γ£à MembershipNFT deployed successfully!
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  Contract address  : 0x8C0aB41bde2b50c48921D38816bEEA7180A48623
+  Contract owner    : 0xDf9C0E9b8e5c7E0Ed27b44d273CB48A7d954d61c
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  ≡ƒôï Default Membership Tiers:
+  ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+  Γöé Tier         Γöé Duration     Γöé Price          Γöé
+  Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+  Γöé MONTHLY (0)  Γöé 30 days      Γöé 0.01 ETH       Γöé
+  Γöé BIANNUAL (1) Γöé 180 days     Γöé 0.05 ETH       Γöé
+  Γöé ANNUAL (2)   Γöé 365 days     Γöé 0.08 ETH       Γöé
+  ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+  ≡ƒô¥ Add this to your frontend .env file:
+  NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS=0x8C0aB41bde2b50c48921D38816bEEA7180A48623
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  ΓÅ│ Waiting for block confirmations before verification...
+  ≡ƒöì Verifying contract on Etherscan...
+node.exe : 
+[33m[WARNING] Network 
+and explorer-specific 
+api keys are 
+deprecated in favour 
+of the new Etherscan 
+v2 api. Support for v1 
+is expected to end by 
+May 31st, 2025. To 
+migrate, please 
+specify a single 
+Etherscan.io api key 
+the apiKey config 
+value.[39m
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : 
+NotSpecified: (    
+[33m[WARNING] ...fig   
+  value.[39m:String) 
+[    ], RemoteException
+    + 
+FullyQualifiedError    
+Id : NativeCommandErr  
+  or
+ 
+
+  Γ¥î Deployment 
+failed: 
+HardhatVerifyError: 
+You are using a 
+deprecated V1 
+endpoint, switch to 
+Etherscan API V2 using 
+https://docs.etherscan.
+io/v2-migration
+    at 
+Etherscan.verify (D:\bl
+ockchain\blockchain_pro
+ject\node_modules\@nomi
+cfoundation\hardhat-ver
+ify\src\internal\ethers
+can.ts:233:13)
+    at processTicksAndR
+ejections (node:interna
+l/process/task_queues:1
+03:5)
+    at SimpleTaskDefini
+tion.action (D:\blockch
+ain\blockchain_project\
+node_modules\@nomicfoun
+dation\hardhat-verify\s
+rc\internal\tasks\ether
+scan.ts:315:33)
+    at Environment._run
+TaskDefinition (D:\bloc
+kchain\blockchain_proje
+ct\node_modules\hardhat
+\src\internal\core\runt
+ime-environment.ts:351:
+14)
+    at Environment.run 
+(D:\blockchain\blockcha
+in_project\node_modules
+\hardhat\src\internal\c
+ore\runtime-environment
+.ts:184:14)
+    at SimpleTaskDefini
+tion.action (D:\blockch
+ain\blockchain_project\
+node_modules\@nomicfoun
+dation\hardhat-verify\s
+rc\internal\tasks\ether
+scan.ts:169:7)
+    at Environment._run
+TaskDefinition (D:\bloc
+kchain\blockchain_proje
+ct\node_modules\hardhat
+\src\internal\core\runt
+ime-environment.ts:351:
+14)
+    at Environment.run 
+(D:\blockchain\blockcha
+in_project\node_modules
+\hardhat\src\internal\c
+ore\runtime-environment
+.ts:184:14)
+    at SimpleTaskDefini
+tion.action (D:\blockch
+ain\blockchain_project\
+node_modules\@nomicfoun
+dation\hardhat-verify\s
+rc\index.ts:313:9)
+    at Environment._run
+TaskDefinition (D:\bloc
+kchain\blockchain_proje
+ct\node_modules\hardhat
+\src\internal\core\runt
+ime-environment.ts:351:
+14)
