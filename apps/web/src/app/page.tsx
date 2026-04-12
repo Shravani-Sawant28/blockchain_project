@@ -18,6 +18,7 @@
 //     </main>
 //   );
 // }
+import { BuyMembershipButton } from '@/components/membership/BuyMembershipButton';
 import { ConnectWallet } from '@/components/membership/ConnectWallet';
 import { ERC721InteractionPanel } from '@/lib/erc721-stylus/src';
 
@@ -28,12 +29,14 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-8">
           My DApp
         </h1>
+
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-12">
           A Web3 application built with Cradle
         </p>
 
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center justify-center">
           <ConnectWallet />
+          <BuyMembershipButton />
         </div>
 
         <ERC721InteractionPanel />
