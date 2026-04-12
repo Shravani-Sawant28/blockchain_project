@@ -4,5 +4,7 @@ declare namespace NodeJS {
         NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?: string;
   NEXT_PUBLIC_APP_NAME ?: string;
         NEXT_PUBLIC_CONTRACT_ADDRESS?: string;
+        /** Deployed Membership NFT (ethers.js membership flow) */
+        NEXT_PUBLIC_MEMBERSHIP_NFT_ADDRESS?: string;
 }
     }
