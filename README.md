@@ -4,21 +4,6 @@
 
 A decentralized membership platform where owning an NFT equals having access — and the smart contract automatically enforces whether that access is still valid.
 
----
-
-## 📖 Table of Contents
-
-- [Overview](#overview)
-- [User Flow](#user-flow)
-- [System Architecture](#system-architecture)
-- [Data Flow](#data-flow)
-- [Core Contract Logic](#core-contract-logic)
-- [Build Phases](#build-phases)
-- [Tech Stack](#tech-stack)
-- [Mental Model](#mental-model)
-
----
-
 ## Overview
 
 Traditional membership systems rely on centralized servers to track and verify subscriptions. This project replaces that with an on-chain approach:
@@ -91,8 +76,6 @@ ELSE                             →  deny access
 
 ### 🔹 A. Smart Contract — Core Engine
 
-> Lives on the blockchain. This is your backend.
-
 **Responsibilities:**
 - Mint NFTs upon membership purchase
 - Store expiry timestamps per token
@@ -164,89 +147,6 @@ User clicks button
               → UI reflects the change
 ```
 
-No shortcuts. No centralized shortcuts. Every state change is cryptographically verified.
-
----
-
-## Core Contract Logic
-
-```solidity
-// Simplified pseudocode
-
-mapping(uint256 => uint256) public tokenExpiry;
-mapping(address => uint256) public userToken;
-
-function mintMembership() external payable {
-    uint256 tokenId = _mint(msg.sender);
-    tokenExpiry[tokenId] = block.timestamp + MEMBERSHIP_DURATION;
-    userToken[msg.sender] = tokenId;
-}
-
-function hasAccess(address user) external view returns (bool) {
-    uint256 tokenId = userToken[user];
-    return (
-        ownerOf(tokenId) == user &&
-        block.timestamp < tokenExpiry[tokenId]
-    );
-}
-```
-
----
-
-## Build Phases
-
-### 🥇 Phase 1 — Smart Contract (Foundation)
-Build the `MembershipNFT` contract with:
-- `mintMembership()` function
-- `hasAccess()` function
-- Expiry mapping
-
-**Output:** ✅ Working contract running locally
-
----
-
-### 🥈 Phase 2 — Deployment
-- Write deployment scripts
-- Deploy to local node or testnet
-- Capture the deployed contract address
-
-**Output:** ✅ Contract live on-chain
-
----
-
-### 🥉 Phase 3 — Frontend Setup
-- Scaffold the UI
-- Implement wallet connection via MetaMask
-
-**Output:** ✅ User can connect their wallet
-
----
-
-### 🏁 Phase 4 — Integration
-- Wire the frontend to the deployed contract using `ethers.js`
-- Buttons call real contract functions
-
-**Output:** ✅ Frontend ↔ Contract fully connected
-
----
-
-### 🔥 Phase 5 — Access Logic
-- Implement "Buy Membership" flow
-- Implement `hasAccess` check on page load and button click
-- Show/hide premium content based on result
-
-**Output:** ✅ Full end-to-end working system
-
----
-
-### ✨ Phase 6 — Polish
-- Display membership expiry date to the user
-- Improve UI and UX details
-- Handle edge cases (expired, wrong network, no wallet)
-
-**Output:** ✅ Production-ready experience
-
----
 
 ## Tech Stack
 
@@ -259,23 +159,4 @@ Build the `MembershipNFT` contract with:
 | Frontend | React (apps/web) |
 | Network | Local / Testnet (e.g. Sepolia) |
 
----
 
-## Mental Model
-
-Whenever you feel lost, come back to this:
-
-```
-NFT             =   Membership card
-Smart Contract  =   The rules (immutable, automatic)
-Frontend        =   The interface (what users see)
-Wallet          =   The user's identity
-```
-
-The smart contract is the single source of truth. The frontend only reads and reacts. The wallet is the only way to prove who you are.
-
----
-
-## License
-
-MIT
