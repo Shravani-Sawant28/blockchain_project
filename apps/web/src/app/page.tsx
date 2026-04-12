@@ -18,7 +18,7 @@
 //     </main>
 //   );
 // }
-import { WalletButton } from '@/components/wallet-button';
+import { ConnectWallet } from '@/components/membership/ConnectWallet';
 import { ERC721InteractionPanel } from '@/lib/erc721-stylus/src';
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
         </p>
 
         <div className="flex justify-center">
-          <WalletButton />
+          <ConnectWallet />
         </div>
 
         <ERC721InteractionPanel />
