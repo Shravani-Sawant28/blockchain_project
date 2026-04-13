@@ -1,49 +1,42 @@
-// import { WalletButton } from '@/components/wallet-button';
-
-// export default function Home() {
-//   return (
-//     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-//       <div className="max-w-5xl w-full text-center">
-//         <h1 className="text-4xl font-bold mb-8">
-//           My DApp
-//         </h1>
-//         <p className="text-lg text-gray-600 dark:text-gray-400 mb-12">
-//           A Web3 application built with Cradle
-//         </p>
-        
-//         <div className="flex justify-center">
-//           <WalletButton />
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
+import { Hero } from '@/components/membership/Hero';
 import { MembershipCard } from '@/components/membership/MembershipCard';
-import { WalletConnect } from '@/components/membership/WalletConnect';
 import { ERC721InteractionPanel } from '@/lib/erc721-stylus/src';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-10 dark:bg-zinc-950">
-      <div className="mx-auto w-full max-w-3xl">
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-            NFT Membership Access
-          </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Connect wallet, mint membership, and manage access.
-          </p>
-        </div>
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Background decorative grid */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:72px_72px]"
+      />
 
-        <div className="space-y-4">
-          <WalletConnect />
+      {/* Page content */}
+      <div className="relative mx-auto w-full max-w-2xl px-4 pb-20 pt-4">
+
+        {/* ── Hero Section ──────────────────────────────────── */}
+        <Hero />
+
+        {/* ── Membership Card (center focus) ───────────────── */}
+        <div className="mt-2 mb-8">
           <MembershipCard />
         </div>
 
-        <div className="mt-8">
+        {/* ── Advanced Interaction Panel (existing) ─────────── */}
+        <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
+          <p className="mb-4 text-[11px] font-bold tracking-[0.2em] uppercase text-forge-muted text-center">
+            Advanced Contract Interactions
+          </p>
           <ERC721InteractionPanel />
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="relative border-t border-white/5 py-6 text-center text-xs text-forge-muted">
+        <p>
+          NFT Membership · Built on Ethereum · ERC-721 Standard
+        </p>
+      </footer>
     </main>
   );
-}
+}
