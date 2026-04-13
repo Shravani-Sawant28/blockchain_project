@@ -38,7 +38,12 @@ const TIER_LABELS: Record<MembershipTierId, { label: string; duration: string; e
   2: { label: 'Annual', duration: '365 days', emoji: '🌟' },
 };
 
-export function BuyMembershipButton() {
+type BuyMembershipButtonProps = {
+  /** Called immediately after the mint transaction confirms on-chain */
+  onMintSuccess?: () => void;
+};
+
+export function BuyMembershipButton({ onMintSuccess }: BuyMembershipButtonProps = {}) {
   const { browserProvider, chainId, isConnected } = useMembershipWallet();
   const { readContract, signedContract, isConfigured } = useMembershipNftContract();
 
@@ -124,12 +129,14 @@ export function BuyMembershipButton() {
         type: 'success',
         text: `Success! Membership minted. Tx ${tx.hash.slice(0, 10)}…${tx.hash.slice(-6)}`,
       });
+      // Notify parent to refresh membership status immediately
+      onMintSuccess?.();
     } catch (err) {
       setMessage({ type: 'error', text: formatTxError(err) });
     } finally {
       setTxPending(false);
     }
-  }, [browserProvider, chainId, isConfigured, isConnected, priceWei, signedContract, tier]);
+  }, [browserProvider, chainId, isConfigured, isConnected, onMintSuccess, priceWei, signedContract, tier]);
 
   const busy = txPending || loadingPrice;
   const canClick = !busy;

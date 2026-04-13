@@ -1,13 +1,31 @@
 'use client';
 
 import { useMembershipWallet } from '@/lib/membership';
+import { useMembershipStatus } from '@/lib/membership/useMembershipStatus';
 import { BuyMembershipButton } from './BuyMembershipButton';
 import { ConnectWallet } from './ConnectWallet';
 
+function formatExpiry(ts: bigint): string {
+  const date = new Date(Number(ts) * 1000);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export function MembershipCard() {
   const { address, isConnected } = useMembershipWallet();
+  const { hasAccess, expiryTimestamp, loading, refresh } = useMembershipStatus();
 
   const shortAddress = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
+
+  // Derive display values
+  const isActive = hasAccess === true;
+  const isNotActive = hasAccess === false;
+  const expiryDisplay = expiryTimestamp ? formatExpiry(expiryTimestamp) : null;
 
   return (
     <section
@@ -39,6 +57,7 @@ export function MembershipCard() {
 
       {/* ── Info Rows ───────────────────────────────────────── */}
       <div className="relative space-y-3 mb-7">
+
         {/* Wallet row */}
         <div className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3">
           <span className="flex items-center gap-2 text-sm text-forge-muted">
@@ -54,7 +73,7 @@ export function MembershipCard() {
           )}
         </div>
 
-        {/* Status row */}
+        {/* Status row — live from contract */}
         <div className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3">
           <span className="flex items-center gap-2 text-sm text-forge-muted">
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -62,17 +81,46 @@ export function MembershipCard() {
             </svg>
             Membership Status
           </span>
-          {/* Placeholder status — will update to live state once minted */}
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2.5 w-2.5 shrink-0">
-              <span className="animate-status-ping absolute inline-flex h-full w-full rounded-full bg-accent-coral opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-coral" />
+
+          {loading && hasAccess === null ? (
+            /* Fetching state */
+            <span className="flex items-center gap-1.5 text-sm text-forge-muted">
+              <svg className="h-3.5 w-3.5 animate-spin-slow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Checking…
             </span>
-            <span className="text-sm font-semibold text-accent-coral">Not Active</span>
-          </div>
+          ) : isActive ? (
+            /* Active */
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="animate-status-ping absolute inline-flex h-full w-full rounded-full bg-accent-lime opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-lime" />
+              </span>
+              <span className="text-sm font-semibold text-accent-lime">Active</span>
+            </div>
+          ) : isNotActive && expiryTimestamp ? (
+            /* Expired (has NFT but expired) */
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-amber" />
+              </span>
+              <span className="text-sm font-semibold text-accent-amber">Expired</span>
+            </div>
+          ) : (
+            /* Not Active / no membership */
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="animate-status-ping absolute inline-flex h-full w-full rounded-full bg-accent-coral opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-coral" />
+              </span>
+              <span className="text-sm font-semibold text-accent-coral">Not Active</span>
+            </div>
+          )}
         </div>
 
-        {/* Expiry row */}
+        {/* Expiry row — live from contract */}
         <div className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3">
           <span className="flex items-center gap-2 text-sm text-forge-muted">
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -80,7 +128,13 @@ export function MembershipCard() {
             </svg>
             Expiry Date
           </span>
-          <span className="text-sm text-forge-muted italic">— (no membership)</span>
+          {expiryDisplay ? (
+            <span className={`text-sm font-medium ${isActive ? 'text-accent-lime' : 'text-accent-amber'}`}>
+              {expiryDisplay}
+            </span>
+          ) : (
+            <span className="text-sm text-forge-muted italic">— (no membership)</span>
+          )}
         </div>
       </div>
 
@@ -102,7 +156,8 @@ export function MembershipCard() {
 
       {/* ── Actions ─────────────────────────────────────────── */}
       <div className="relative">
-        <BuyMembershipButton />
+        {/* Pass refresh so the card updates immediately after mint confirms */}
+        <BuyMembershipButton onMintSuccess={refresh} />
       </div>
 
       {/* ── Footer note ─────────────────────────────────────── */}

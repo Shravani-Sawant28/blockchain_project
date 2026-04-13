@@ -9,4 +9,5 @@ export {
 } from './contract';
 export { MembershipWalletProvider, useMembershipWallet } from './MembershipWalletContext';
 export { useMembershipNftContract } from './useMembershipNftContract';
+export { useMembershipStatus } from './useMembershipStatus';
 export { getMetaMaskProvider, isUserRejectedError, metaMaskInstallMessage } from './metaMask';
