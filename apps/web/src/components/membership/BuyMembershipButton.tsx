@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { formatEther } from 'ethers';
 import {
+  getMembershipNftAddressOrNull,
   isUserRejectedError,
   useMembershipNftContract,
   useMembershipWallet,
@@ -16,6 +17,10 @@ type Message = { type: 'success' | 'error'; text: string };
 function formatTxError(err: unknown): string {
   if (isUserRejectedError(err)) return 'Transaction was rejected.';
   if (typeof err === 'object' && err !== null) {
+    const code = (err as { code?: string }).code;
+    if (code === 'BAD_DATA') {
+      return 'Wrong network or contract address. Switch MetaMask network to where MembershipNFT is deployed.';
+    }
     const short = (err as { shortMessage?: string }).shortMessage;
     if (short) return short;
     const reason = (err as { reason?: string }).reason;
@@ -27,7 +32,7 @@ function formatTxError(err: unknown): string {
 }
 
 export function BuyMembershipButton() {
-  const { isConnected } = useMembershipWallet();
+  const { browserProvider, chainId, isConnected } = useMembershipWallet();
   const { readContract, signedContract, isConfigured } = useMembershipNftContract();
 
   const [tier, setTier] = useState<MembershipTierId>(0);
@@ -71,17 +76,31 @@ export function BuyMembershipButton() {
       setMessage({ type: 'error', text: 'Connect your wallet first.' });
       return;
     }
-    if (priceWei === null) {
-      setMessage({
-        type: 'error',
-        text: 'Could not load price. Check contract address and network.',
-      });
+
+    const contractAddress = getMembershipNftAddressOrNull();
+    if (!browserProvider || !contractAddress) {
+      setMessage({ type: 'error', text: 'Wallet provider is not ready yet. Try again.' });
       return;
     }
 
     setTxPending(true);
     try {
-      const tx = await signedContract.mintMembership(tier, { value: priceWei });
+      const code = await browserProvider.getCode(contractAddress);
+      if (code === '0x') {
+        setMessage({
+          type: 'error',
+          text: `No contract found at ${contractAddress} on current network (chainId: ${chainId ?? 'unknown'}).`,
+        });
+        return;
+      }
+
+      let value = priceWei;
+      if (value === null) {
+        value = (await signedContract.tierPrice(tier)) as bigint;
+        setPriceWei(value);
+      }
+
+      const tx = await signedContract.mintMembership(tier, { value });
       setMessage({
         type: 'success',
         text: `Submitted. Waiting for confirmation… (${tx.hash.slice(0, 10)}…)`,
@@ -96,10 +115,10 @@ export function BuyMembershipButton() {
     } finally {
       setTxPending(false);
     }
-  }, [isConfigured, isConnected, priceWei, signedContract, tier]);
+  }, [browserProvider, chainId, isConfigured, isConnected, priceWei, signedContract, tier]);
 
   const busy = txPending || loadingPrice;
-  const canClick = isConfigured && priceWei !== null && !busy;
+  const canClick = !busy;
 
   return (
     <div className="mt-6 flex w-full max-w-md flex-col items-center gap-3">
