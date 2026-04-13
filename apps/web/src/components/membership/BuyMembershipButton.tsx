@@ -8,6 +8,7 @@ import {
   useMembershipNftContract,
   useMembershipWallet,
 } from '@/lib/membership';
+import { ActionButton } from './ActionButton';
 
 /** Matches `MembershipNFT.MembershipTier`: MONTHLY, BIANNUAL, ANNUAL */
 export type MembershipTierId = 0 | 1 | 2;
@@ -152,14 +153,13 @@ export function BuyMembershipButton() {
         ) : null}
       </div>
 
-      <button
-        type="button"
-        onClick={() => void buy()}
+      <ActionButton
+        label="Buy Membership"
+        loadingLabel="Processing..."
+        loading={txPending}
         disabled={!canClick}
-        className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {txPending ? 'Processing…' : 'Buy Membership'}
-      </button>
+        onClick={() => void buy()}
+      />
 
       {!isConfigured ? (
         <p className="text-center text-xs text-zinc-500">
