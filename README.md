@@ -1,5 +1,9 @@
 # 🔐 NFT Membership Access System
 <img width="676" height="500" alt="image" src="https://github.com/user-attachments/assets/af9c5592-4cae-42fe-9f61-f95b9132b9d9" />
+<br>
+<br>
+<img width="676" height="497" alt="image" src="https://github.com/user-attachments/assets/4b9b7675-a022-4f20-b1f5-3588a6ed880b" />
+
 
 > **Own the NFT. Hold the key. The blockchain decides the rest.**
 
