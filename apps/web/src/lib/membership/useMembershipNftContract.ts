@@ -20,14 +20,14 @@ export type UseMembershipNftContractResult = {
  * Use `readContract` for view calls; use `signedContract` for `mintMembership` and other txs.
  */
 export function useMembershipNftContract(): UseMembershipNftContractResult {
-  const { browserProvider, signer } = useMembershipWallet();
+  const { readProvider, signer } = useMembershipWallet();
 
   const isConfigured = getMembershipNftAddressOrNull() !== null;
 
   const readContract = useMemo(() => {
-    if (!browserProvider) return null;
-    return getMembershipNftContractIfConfigured(browserProvider);
-  }, [browserProvider]);
+    if (!readProvider) return null;
+    return getMembershipNftContractIfConfigured(readProvider);
+  }, [readProvider]);
 
   const signedContract = useMemo(() => {
     if (!signer) return null;

@@ -4,9 +4,7 @@ const { ethers, network } = require("hardhat");
  * MembershipNFT Deployment Script
  *
  * Usage:
- *   Localhost:  npx hardhat run scripts/deploy-membership.js --network localhost
- *   Sepolia:    npx hardhat run scripts/deploy-membership.js --network sepolia
- *   Mumbai:     npx hardhat run scripts/deploy-membership.js --network mumbai
+ *   npx hardhat run scripts/deploy-membership.js --network localhost
  */
 
 async function main() {
@@ -52,37 +50,15 @@ async function main() {
   console.log("  └──────────────┴──────────────┴────────────────┘");
 
   // ── 7. Print .env hint ───────────────────────────────────────────
-  console.log("\n  📝 Add this to your frontend .env file:");
-  console.log(`  NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS=${contractAddress}`);
+  console.log("\n  📝 Add this to apps/web/.env.local:");
+  console.log(`  NEXT_PUBLIC_MEMBERSHIP_NFT_ADDRESS=${contractAddress}`);
   console.log("─────────────────────────────────────────────────\n");
 
-  // ── 8. Optional: verify on Etherscan ─────────────────────────────
-  if (
-    process.env.ETHERSCAN_API_KEY &&
-    network.name !== "localhost" &&
-    network.name !== "hardhat"
-  ) {
-    console.log("  ⏳ Waiting for block confirmations before verification...");
-    await membership.deploymentTransaction().wait(5);
-
-    console.log("  🔍 Verifying contract on Etherscan...");
-    try {
-      await hre.run("verify:verify", {
-        address: contractAddress,
-        constructorArguments: [deployer.address],
-      });
-      console.log("  ✅ Contract verified on Etherscan!\n");
-    } catch (verifyError) {
-      // Verification failure does NOT mean deployment failed.
-      // This commonly happens due to Etherscan API version mismatches.
-      // Your contract is deployed and functional regardless.
-      console.log("  ⚠️  Etherscan verification skipped:", verifyError.message);
-      console.log("  ℹ️  You can verify manually later with:");
-      console.log(`  npx hardhat verify --network ${network.name} ${contractAddress} "${deployer.address}"\n`);
-    }
+  if (network.name !== "localhost" && network.name !== "hardhat") {
+    throw new Error("This script is configured for localhost only.");
   }
 
-  console.log("  🎉 Deployment complete!\n");
+  console.log("  🎉 Local deployment complete!\n");
 }
 
 // ── Entry point ────────────────────────────────────────────────────

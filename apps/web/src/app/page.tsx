@@ -38,7 +38,6 @@ export default function Home() {
           <ConnectWallet />
           <BuyMembershipButton />
         </div>
-
         <ERC721InteractionPanel />
       </div>
     </main>

@@ -3,7 +3,8 @@
 import { useMembershipWallet } from '@/lib/membership';
 
 export function ConnectWallet() {
-  const { address, connecting, error, connect, disconnect } = useMembershipWallet();
+  const { address, chainId, connecting, error, connect, switchToLocalhost, disconnect } =
+    useMembershipWallet();
 
   const shortAddress = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
@@ -36,6 +37,18 @@ export function ConnectWallet() {
         <p className="max-w-md text-center text-sm text-red-600 dark:text-red-400" role="alert">
           {error}
         </p>
+      ) : null}
+      {address ? (
+        <p className="text-xs text-zinc-500">Connected network chainId: {chainId ?? 'unknown'}</p>
+      ) : null}
+      {address && chainId !== 31337 ? (
+        <button
+          type="button"
+          onClick={() => void switchToLocalhost()}
+          className="rounded-lg border border-amber-500 px-3 py-1 text-xs text-amber-700 hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950"
+        >
+          Switch to Localhost (31337)
+        </button>
       ) : null}
     </div>
   );

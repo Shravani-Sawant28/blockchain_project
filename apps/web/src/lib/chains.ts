@@ -1,7 +1,21 @@
+import { defineChain } from 'viem';
 
-    import { type Chain } from 'viem';
-import { mainnet, sepolia, arbitrum, arbitrumSepolia } from 'viem/chains';
+const LOCAL_RPC_URL = process.env.NEXT_PUBLIC_LOCAL_RPC_URL || 'http://127.0.0.1:8545';
 
-    // Default supported chains
-    export const chains = [arbitrum, arbitrumSepolia, mainnet, sepolia] as const;
+export const localhostHardhat = defineChain({
+  id: 31337,
+  name: 'Localhost Hardhat',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ethereum',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: [LOCAL_RPC_URL],
+    },
+  },
+});
+
+export const chains = [localhostHardhat] as const;
   

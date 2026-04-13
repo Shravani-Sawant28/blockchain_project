@@ -101,8 +101,8 @@ const ERC721_ABI = [
 // Network-specific default contract addresses (only for networks where contracts are deployed)
 const DEFAULT_CONTRACT_ADDRESSES: Record<string, string | undefined> = {
   'arbitrum-sepolia': '0xe2a8cd01354ecc63a8341a849e9b89f14ff9f08f',
-  'arbitrum': undefined, // No default contract deployed on mainnet
-  'superposition': undefined, // No default contract deployed on mainnet
+  'arbitrum': undefined, // No default contract deployed on this network
+  'superposition': undefined, // No default contract deployed on this network
   'superposition-testnet': '0xa0cc35ec0ce975c28dacc797edb7808e882043c3',
   'robinhood-testnet': '0xa0cc35ec0ce975c28dacc797edb7808e882043c3',
 };

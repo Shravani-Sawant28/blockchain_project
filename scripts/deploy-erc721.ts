@@ -9,7 +9,7 @@ import { deployERC721CollectionViaAPI } from '@cradle/erc721-stylus';
 async function main() {
   const privateKey = process.env.PRIVATE_KEY;
   const apiUrl = process.env.ERC721_DEPLOYMENT_API_URL || 'http://localhost:4001';
-  const rpcEndpoint = process.env.RPC_ENDPOINT || 'https://sepolia-rollup.arbitrum.io/rpc';
+  const rpcEndpoint = process.env.RPC_ENDPOINT || 'http://127.0.0.1:8545';
 
   if (!privateKey) {
     throw new Error('PRIVATE_KEY environment variable is required');
@@ -19,7 +19,7 @@ async function main() {
   console.log('Name:', 'SuperPositionNFT');
   console.log('Symbol:', 'SPTNFT');
   console.log('Base URI:', 'https://api.example.com/metadata/');
-  console.log('Network:', 'arbitrum-sepolia');
+  console.log('Network:', 'localhost');
 
   const result = await deployERC721CollectionViaAPI({
     name: 'SuperPositionNFT',

@@ -11,8 +11,11 @@ import {
 import { ethers } from 'ethers';
 import { getMetaMaskProvider, isUserRejectedError, metaMaskInstallMessage } from './metaMask';
 
+const LOCAL_RPC_URL = process.env.NEXT_PUBLIC_LOCAL_RPC_URL || 'http://127.0.0.1:8545';
+
 export type MembershipWalletContextValue = {
   browserProvider: ethers.BrowserProvider | null;
+  readProvider: ethers.BrowserProvider | ethers.JsonRpcProvider | null;
   signer: ethers.JsonRpcSigner | null;
   address: string | null;
   chainId: number | null;
@@ -20,6 +23,7 @@ export type MembershipWalletContextValue = {
   error: string | null;
   isConnected: boolean;
   connect: () => Promise<void>;
+  switchToLocalhost: () => Promise<void>;
   disconnect: () => void;
 };
 
@@ -27,6 +31,9 @@ const MembershipWalletContext = createContext<MembershipWalletContextValue | nul
 
 export function MembershipWalletProvider({ children }: { children: React.ReactNode }) {
   const [browserProvider, setBrowserProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [readProvider, setReadProvider] = useState<
+    ethers.BrowserProvider | ethers.JsonRpcProvider | null
+  >(null);
   const [address, setAddress] = useState<string | null>(null);
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
@@ -35,7 +42,14 @@ export function MembershipWalletProvider({ children }: { children: React.ReactNo
 
   useEffect(() => {
     const eth = getMetaMaskProvider();
-    setBrowserProvider(eth ? new ethers.BrowserProvider(eth) : null);
+    if (eth) {
+      const p = new ethers.BrowserProvider(eth);
+      setBrowserProvider(p);
+      setReadProvider(p);
+      return;
+    }
+    setBrowserProvider(null);
+    setReadProvider(new ethers.JsonRpcProvider(LOCAL_RPC_URL));
   }, []);
 
   const syncFromProvider = useCallback(async (provider: ethers.BrowserProvider) => {
@@ -50,7 +64,12 @@ export function MembershipWalletProvider({ children }: { children: React.ReactNo
     const s = await provider.getSigner();
     setSigner(s);
     const network = await provider.getNetwork();
-    setChainId(Number(network.chainId));
+    const resolvedChainId = Number(network.chainId);
+    console.log('[membership] connected chainId:', resolvedChainId);
+    setChainId(resolvedChainId);
+    if (resolvedChainId !== 31337) {
+      setError(`Wrong network: expected localhost chainId 31337, got ${resolvedChainId}.`);
+    }
   }, []);
 
   useEffect(() => {
@@ -101,6 +120,34 @@ export function MembershipWalletProvider({ children }: { children: React.ReactNo
     }
   }, [syncFromProvider]);
 
+  const switchToLocalhost = useCallback(async () => {
+    const eth = getMetaMaskProvider();
+    if (!eth) {
+      setError(metaMaskInstallMessage());
+      return;
+    }
+    try {
+      await eth.request?.({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x7a69' }],
+      });
+    } catch {
+      await eth.request?.({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0x7a69',
+            chainName: 'Localhost 8545',
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+            rpcUrls: [LOCAL_RPC_URL],
+          },
+        ],
+      });
+    }
+    const provider = new ethers.BrowserProvider(eth);
+    await syncFromProvider(provider);
+  }, [syncFromProvider]);
+
   const disconnect = useCallback(() => {
     setAddress(null);
     setSigner(null);
@@ -111,6 +158,7 @@ export function MembershipWalletProvider({ children }: { children: React.ReactNo
   const value = useMemo<MembershipWalletContextValue>(
     () => ({
       browserProvider,
+      readProvider,
       signer,
       address,
       chainId,
@@ -118,9 +166,10 @@ export function MembershipWalletProvider({ children }: { children: React.ReactNo
       error,
       isConnected: Boolean(address && signer),
       connect,
+      switchToLocalhost,
       disconnect,
     }),
-    [address, browserProvider, chainId, connect, connecting, disconnect, error, signer],
+    [address, browserProvider, chainId, connect, connecting, disconnect, error, readProvider, signer, switchToLocalhost],
   );
 
   return (

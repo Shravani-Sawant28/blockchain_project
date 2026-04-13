@@ -76,6 +76,13 @@ export function BuyMembershipButton() {
       setMessage({ type: 'error', text: 'Connect your wallet first.' });
       return;
     }
+    if (chainId !== 31337) {
+      setMessage({
+        type: 'error',
+        text: `Wrong network. Switch MetaMask to localhost (chainId 31337). Current: ${chainId ?? 'unknown'}.`,
+      });
+      return;
+    }
 
     const contractAddress = getMembershipNftAddressOrNull();
     if (!browserProvider || !contractAddress) {

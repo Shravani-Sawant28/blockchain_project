@@ -6,10 +6,7 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "node": "hardhat node",
-    "deploy:local": "hardhat run scripts/deploy-membership.js --network localhost",
-    "deploy:sepolia": "hardhat run scripts/deploy-membership.js --network sepolia",
-    "deploy:mumbai": "hardhat run scripts/deploy-membership.js --network mumbai",
-    "verify:sepolia": "hardhat verify --network sepolia",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
     "clean": "hardhat clean"
   },
   "devDependencies": {
